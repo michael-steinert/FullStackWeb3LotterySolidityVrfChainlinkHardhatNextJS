@@ -1,34 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Full Stack Web3 Lottery
 
-## Getting Started
+## Ethereum
 
-First, run the development server:
+* Ethereum is an Open Source, globally decentralized Computing Infrastructure that executes Smart Contracts
+* It uses a Blockchain to synchronize and store its Changes
+* It uses a Cryptocurrency called Ether to meter and constrain Execution Resource Costs
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Contract ABI Specification
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* The Contract Application Binary Interface (ABI) is the standard Way to interact with Contracts in the Ethereum ecosystem
+* ABIs are used for the Interaction from Outside the Blockchain and for Contract-to-Contract Interaction
+* It describes the Interfaces from the Smart Contracts
+* Data is encoded according to its Type, as described in this Specification
+* The Encoding is not self describing and thus requires a Schema in Order to decode
+* Using the higher-level Library Web3.js abstracts most of technical Details, but the ABIs in JSON format are still needed to be provided to Web3.js
+* ABIs are imported in the Front End to interact with the Blockchain
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Dependencies
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+### Infura
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+* Infura allows interacting with a Network (Blockchain) without having an own Node
 
-## Learn More
+### Ethers.js
 
-To learn more about Next.js, take a look at the following resources:
+* The Ethers.js Library aims for Interacting with the Ethereum Blockchain and its Ecosystem from client-side JavaScript
+* Similar Tool in the Ecosystem is Web3.js
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Hardhat
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+* Hardhat is an Ethereum development Environment and Framework designed for Full Stack Development
+* Similar Tools in the Ecosystem are Ganache and Truffle
 
-## Deploy on Vercel
+### Ethereum-Waffle
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* Framework for Testing Smart Contracts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Chai
+
+* Chai is a BDD (Behavior driven Design) / TDD (Test driven Design) Assertion Library for Node.js, and the Browser
+* It can be paired with any JavaScript Testing Framework
+
+### MetaMask
+
+* Metamask helps to handle Account Management and Connecting the current User to the Blockchain
+* It enables Users to manage their Accounts and Keys while isolating them from the Site Context
+* Once a User has connected their MetaMask Wallet, it can interact with the globally available Ethereum API (window.ethereum)
+* The Ethereum API (window.ethereum) identifies the Users of web3-compatible Browsers (like MetaMask Users), and allows to request a Transaction Signature
+
+### OpenZeppelin (Contracts)
+
+* OpenZeppelin provides Security Products to build, automate, and operate decentralized applications
+* It contains Implementations of Standards like ERC20 and ERC721.
+* It provides reusable Solidity Components to build Custom Contracts and decentralized Systems
+
+## Hardhat Commands
+
+| Command                                             | Description                                                            | 
+|-----------------------------------------------------|------------------------------------------------------------------------|
+| npx hardhat compile                                 | To compile the Smart Contracts in the Blockchain and create their ABIs |
+| npx hardhat node                                    | Creating local Network (Blockchain) from initial Node                  |
+| npx hardhat run scripts/deploy.js --network rinkeby | Deploying the Smart Contracts into the Rinkeby Test Network            |
+
