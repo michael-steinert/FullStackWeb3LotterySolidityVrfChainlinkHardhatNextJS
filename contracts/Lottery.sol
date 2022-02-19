@@ -5,18 +5,34 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
-contract Lottery is Ownable, ReentrancyGuard, VRFConsumerBase  {
+contract Lottery is Ownable, ReentrancyGuard, VRFConsumerBase {
     /* storage (default) - Variable is a State Variable (and stored on Blockchain) */
     /* Functions and Addresses declared as `payable` can receive Ether into the Contract */
     address payable[] public players;
     uint public lotteryId;
-    mapping (uint => address payable) public lotteryHistory;
+    mapping(uint => address payable) public lotteryHistory;
     /* KeyHash identifies which Chainlink Oracle VRF Node to use */
     bytes32 internal keyHash;
     /* Fee for VRF Node */
     uint internal fee;
     /* Result from VRF Node */
     uint public randomResult;
+    /* State of Lottery */
+    enum State {ON, OFF}
+    State public state;
+
+    /* Custom Error */
+    /// Function can not be called at current State of Lottery
+    /// @param _state required to call Function
+    error InvalidState(State _state);
+
+    /* Custom Modifier */
+    modifier onlyInState(State _state) {
+        if(state != _state) {
+            revert InvalidState(_state);
+        }
+        _;
+    }
 
     constructor() Ownable() ReentrancyGuard() VRFConsumerBase(
     /* VRF Coordinator Address on Testnet Rinkeby */
@@ -26,7 +42,8 @@ contract Lottery is Ownable, ReentrancyGuard, VRFConsumerBase  {
     ) {
         /* KeyHash on Testnet Rinkeby */
         keyHash = 0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311;
-        fee = 0.1 * 10 ** 18;    // 0.1 LINK
+        fee = 0.1 * 10 ** 18;
+        // 0.1 LINK
         lotteryId = 1;
     }
 
@@ -59,11 +76,11 @@ contract Lottery is Ownable, ReentrancyGuard, VRFConsumerBase  {
         players.push(payable(msg.sender));
     }
 
-    function pickWinner() public onlyOwner() {
+    function pickWinner() public onlyOwner() onlyInState(State.ON) {
         getRandomNumber();
     }
 
-    function payWinner() public onlyOwner() nonReentrant() {
+    function payWinner() public onlyOwner() nonReentrant() onlyInState(State.ON) {
         require(randomResult > 0, "A random Number has to be generated before choosing a Winner");
         /* Limiting the maximum possible Numbers to Number of Players */
         uint index = randomResult % players.length;
@@ -74,5 +91,13 @@ contract Lottery is Ownable, ReentrancyGuard, VRFConsumerBase  {
         players[index].transfer(address(this).balance);
         /* Resetting the State of the Contract */
         players = new address payable[](0);
+    }
+
+    function turnOn() public onlyOwner() {
+        state = State.ON;
+    }
+
+    function turnOff() public onlyOwner() {
+        state = State.OFF;
     }
 }

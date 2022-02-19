@@ -42,4 +42,32 @@ describe("Lottery Test Suite", async () => {
         /* Then */
         expect(jackpot).to.equal(ethers.utils.parseEther("0.5"));
     });
+
+    it("Should turn on", async () => {
+        /* Given */
+        await lottery.turnOn();
+        /* When */
+        const state = await lottery.state();
+        /* Then */
+        expect(state).to.equal(0);
+    });
+
+    it("Should turn off", async () => {
+        /* Given */
+        await lottery.turnOff();
+        /* When */
+        const state = await lottery.state();
+        /* Then */
+        expect(state).to.equal(1);
+    });
+
+    it("Should throw Invalid State Exception", async () => {
+        /* Given */
+        await lottery.turnOff();
+        /* When */
+        const state = await lottery.state();
+        /* Then */
+        expect(state).to.equal(1);
+        await expect(lottery.pickWinner()).to.be.revertedWith("InvalidState(0)");
+    });
 });
